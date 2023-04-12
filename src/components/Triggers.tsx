@@ -1,4 +1,4 @@
-import { MagnifyingGlass, X } from '@phosphor-icons/react'
+import { MagnifyingGlass } from '@phosphor-icons/react'
 import clsx from 'clsx'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { z } from 'zod'
@@ -33,7 +33,7 @@ export function Triggers() {
     return filteredData
   }, [])
 
-  const { module, setModule } = useContext(ModuleContext)
+  const { module } = useContext(ModuleContext)
   const { handleSubmit, register, reset, setFocus } =
     useForm<CreateTriggerInput>({
       resolver: zodResolver(createTriggerSchema),
@@ -92,12 +92,6 @@ export function Triggers() {
     [isSearching, reset],
   )
 
-  const handleClosePage = useCallback(() => {
-    setModule(null)
-
-    setIsSearching(false)
-  }, [setModule])
-
   return (
     <div
       className={clsx(
@@ -119,19 +113,13 @@ export function Triggers() {
             </span>
           </section>
 
-          <div className="flex items-center">
-            <button
-              onClick={() => handleChangeIsSearching()}
-              className="flex items-center gap-x-2 h-8 pl-2 pr-3 mr-4 rounded-full text-[11px] font-medium bg-zinc-100/25 text-zinc-500 border border-zinc-50 hover:border-zinc-400 transition-[:hover] duration-200"
-            >
-              <MagnifyingGlass weight="duotone" size={18} />
-              SEARCH
-            </button>
-
-            <button onClick={() => handleClosePage()}>
-              <X size={20} className="text-red-500" />
-            </button>
-          </div>
+          <button
+            onClick={() => handleChangeIsSearching()}
+            className="flex items-center gap-x-2 h-8 pl-2 pr-3 mr-4 rounded-full text-[11px] font-medium bg-zinc-100/25 text-zinc-500 border border-zinc-50 hover:border-zinc-400 transition-[:hover] duration-200"
+          >
+            <MagnifyingGlass weight="duotone" size={18} />
+            SEARCH
+          </button>
         </header>
 
         <form className="flex my-10" onSubmit={handleSubmit(onSubmit)}>

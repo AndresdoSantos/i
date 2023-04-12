@@ -15,8 +15,10 @@ import { makeSlug } from '../utils/makeSlug'
 import { localStorage } from '../utils/localStorage'
 
 import { CourseContext } from '../contexts/Course.context'
+import { LessonItemFormContext } from '../contexts/LessonItemForm.context'
 
 import type { Course, Todo, TodoList } from '../@types'
+import { Modal } from './Dialog'
 
 export function CourseSettings() {
   const { course, setCourse, isFocused } = useContext(CourseContext)
@@ -29,10 +31,10 @@ export function CourseSettings() {
     setShowUncompletedTasks((prevState) => !prevState)
   }, [])
 
-  const [tasks, setTasks] = useState<TodoList>(() => ({
+  const [tasks, setTasks] = useState<TodoList>({
     data: [],
     path: '',
-  }))
+  })
 
   const handleChangeTask = useCallback(
     (task: Todo) => {
@@ -112,7 +114,7 @@ export function CourseSettings() {
 
         <div className="border rounded-full py-1 px-3">
           <p className="text-zinc-700 font-bold text-[13px]">
-            {percentage}%{' '}
+            {isNaN(percentage) ? 0 : percentage}%{' '}
             <span className="text-[11px] font-medium">OF PROGRESS</span>
           </p>
         </div>
@@ -134,18 +136,28 @@ export function CourseSettings() {
             START STUDY
           </a>
 
-          <button
-            className={clsx(
-              'flex items-center gap-2 text-[10px] font-medium rounded-full border p-1 pr-4 text-zinc-600',
-              {
-                hidden: isFocused,
-              },
-            )}
-            onClick={() => handleFocusACourse()}
-          >
-            <Target size={20} weight="duotone" className="text-orange-500" />
-            {isFocused ? 'KEEP FOCUSED' : 'FOCUS'}
-          </button>
+          <Modal.Root>
+            <Modal.Trigger>
+              <button
+                className={clsx(
+                  'flex items-center gap-2 text-[10px] font-medium rounded-full border p-1 pr-4 text-zinc-600',
+                  {
+                    hidden: isFocused,
+                  },
+                )}
+                onClick={() => handleFocusACourse()}
+              >
+                <Target
+                  size={20}
+                  weight="duotone"
+                  className="text-orange-500"
+                />
+                {isFocused ? 'KEEP FOCUSED' : 'FOCUS'}
+              </button>
+            </Modal.Trigger>
+
+            <Modal.Portal></Modal.Portal>
+          </Modal.Root>
 
           <button
             className="flex items-center gap-2 text-[10px] text-zinc-600 font-medium rounded-full border p-1 pr-4"
@@ -172,44 +184,61 @@ export function CourseSettings() {
 
       <ul className="mt-10">
         <h2 className="mb-5 text-zinc-500 text-xs font-medium tracking-widest">
-          TAREFAS
+          COURSE TASKS
         </h2>
 
-        {tasks.data.map((item) => {
-          return (
-            <li
-              key={item.title}
-              className={clsx(
-                'flex items-center gap-x-4 mb-4 transition-opacity duration-200',
-                {
-                  'opacity-30': showUncompletedTasks && item.completed,
-                },
-              )}
-            >
-              <button
-                onClick={() => handleChangeTask(item)}
-                className="flex items-center justify-center h-5 w-5 border disabled:cursor-not-allowed"
-                disabled={showUncompletedTasks && item.completed}
-              >
-                <Check
-                  className={clsx({
-                    'text-green-500': item.completed,
-                    invisible: !item.completed,
-                  })}
-                  size={14}
-                  weight="bold"
-                />
-              </button>
+        {tasks.data.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-[12rem]">
+            <img
+              src="/open-doodle-dog.png"
+              alt="Dog"
+              className="w-52"
+              srcSet=""
+            />
 
-              <p className="text-xs text-zinc-700 uppercase font-medium">
-                {item.title}
-              </p>
-            </li>
-          )
-        })}
+            <span className="text-[13px] text-zinc-700 text-center mt-10">
+              Add tasks here or go spend time <br /> with people you care about.
+            </span>
+          </div>
+        ) : (
+          <>
+            {tasks.data.map((item) => (
+              <li
+                key={item.title}
+                className={clsx(
+                  'flex items-center gap-x-4 mb-4 transition-opacity duration-200',
+                  {
+                    'opacity-30': showUncompletedTasks && item.completed,
+                  },
+                )}
+              >
+                <button
+                  onClick={() => handleChangeTask(item)}
+                  className="flex items-center justify-center h-5 w-5 border disabled:cursor-not-allowed"
+                  disabled={showUncompletedTasks && item.completed}
+                >
+                  <Check
+                    className={clsx({
+                      'text-green-500': item.completed,
+                      invisible: !item.completed,
+                    })}
+                    size={14}
+                    weight="bold"
+                  />
+                </button>
+
+                <p className="text-xs text-zinc-700 uppercase font-medium">
+                  {item.title}
+                </p>
+              </li>
+            ))}
+          </>
+        )}
       </ul>
 
-      <LessonItemForm />
+      <LessonItemFormContext.Provider value={{ setTasks, tasks }}>
+        <LessonItemForm />
+      </LessonItemFormContext.Provider>
     </aside>
   )
 }

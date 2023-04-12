@@ -11,6 +11,7 @@ export function FutureCoursesList() {
 
   const courses = useMemo(() => {
     const data = localStorage.getItem<Course[]>('studies')
+    console.log('data - ', data)
 
     const courseInFocus = localStorage.getItem<Course>('focused_course')
 
@@ -29,6 +30,8 @@ export function FutureCoursesList() {
     },
     [setCourse, setIsFocused],
   )
+
+  console.log('courses - ', courses)
 
   return (
     <>
