@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { Calendar, X } from '@phosphor-icons/react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -22,6 +22,12 @@ export function ScheduleStudy() {
   const { handleSubmit, register, reset } = useForm<CreateScheduleInput>({
     resolver: zodResolver(createScheduleStudySchema),
   })
+
+  const hasMoreThanFiveCourses = useMemo(() => {
+    const oldCourses = localStorage.getItem<CreateScheduleInput[]>('studies')
+
+    return oldCourses && oldCourses.length > 5
+  }, [])
 
   const onSubmit = useCallback(
     (input: CreateScheduleInput) => {
@@ -47,6 +53,7 @@ export function ScheduleStudy() {
           {
             '-translate-y-40': isStudying,
             'translate-y-0': !isStudying,
+            hidden: hasMoreThanFiveCourses,
           },
         )}
       >

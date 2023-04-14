@@ -10,6 +10,7 @@ import clsx from 'clsx'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { LessonItemForm } from './LessonItemForm'
+import { Modal } from './Dialog'
 
 import { makeSlug } from '../utils/makeSlug'
 import { localStorage } from '../utils/localStorage'
@@ -18,7 +19,6 @@ import { CourseContext } from '../contexts/Course.context'
 import { LessonItemFormContext } from '../contexts/LessonItemForm.context'
 
 import type { Course, Todo, TodoList } from '../@types'
-import { Modal } from './Dialog'
 
 export function CourseSettings() {
   const { course, setCourse, isFocused } = useContext(CourseContext)
@@ -199,6 +199,12 @@ export function CourseSettings() {
             <span className="text-[13px] text-zinc-700 text-center mt-10">
               Add tasks here or go spend time <br /> with people you care about.
             </span>
+
+            <button className="text-zinc-700 text-sm mt-5 group">
+              Set as a class
+              <div className="h-[1px] w-full bg-cyan-500 transition-[:rotate] duration-150 group-hover:animate-pulse group-hover:rotate-3 mt-2"></div>
+              <div className="h-[1px] w-full bg-pink-500 transition-[:rotate] duration-150 group-hover:animate-pulse group-hover:-rotate-6"></div>
+            </button>
           </div>
         ) : (
           <>
