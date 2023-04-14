@@ -10,6 +10,25 @@ export default defineConfig({
       devOptions: {
         enabled: true,
       },
+      manifest: {
+        name: 'My fucking triggers',
+        short_name: 'my-fucking-triggers',
+        description: 'This is my fucking triggers',
+        theme_color: '#ffffff',
+        display: 'fullscreen',
+        icons: [
+          {
+            src: 'vite.svg',
+            sizes: '192x192',
+            type: 'image/svg',
+          },
+          {
+            src: 'vite.svg',
+            sizes: '512x512',
+            type: 'image/svg',
+          },
+        ],
+      },
     }),
   ],
   server: {
